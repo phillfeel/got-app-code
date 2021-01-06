@@ -8,7 +8,7 @@ import ErrorMessage from '../errorMessage/errorMessage';
 import CharacterPage from '../characterPage';
 
 import ItemList from '../itemList';
-import CharDetails from '../charDetails';
+import ItemDetails from '../itemDetails';
 import GotService from '../../services/gotService'
 
 const styledBtn = {
@@ -82,7 +82,9 @@ export default class App extends Component{
                            />
                        </Col>
                        <Col md='6'>
-                           <CharDetails charId={this.state.selectedChar}/>
+                           <ItemDetails itemId={this.state.selectedChar}
+                               getData={this.gotService.getBook}
+                           />
                        </Col>
                    </Row>
                    <Row>
@@ -93,7 +95,9 @@ export default class App extends Component{
                            />
                        </Col>
                        <Col md='6'>
-                           <CharDetails charId={this.state.selectedChar}/>
+                           <ItemDetails itemId={this.state.selectedChar}
+                                getData={this.gotService.getHouse}
+                           />
                        </Col>
                    </Row>
                     
