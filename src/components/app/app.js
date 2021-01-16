@@ -1,11 +1,12 @@
 import React,{Component} from 'react';
 import {Col, Row, Container, Button} from 'reactstrap';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
+import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
 import Header from '../header';
 import RandomChar from '../randomChar';
 import ErrorMessage from '../errorMessage/errorMessage';
-import CharacterPage from '../characterPage';
+import {CharacterPage, BooksPage, HousesPage, BooksItem} from '../pages';
 
 import ItemList from '../itemList';
 import ItemDetails from '../itemDetails';
@@ -16,6 +17,15 @@ const styledBtn = {
     marginBottom: '30px'
     
 }
+
+const styledH1 = {
+    marginTop: '50px',
+    color: '#fff',
+    textAlign:'center'
+    
+}
+
+
 
 export default class App extends Component{
     gotService = new GotService();
@@ -58,51 +68,50 @@ export default class App extends Component{
     }
 
         return(
-            <> 
-                <Container>
-                    <Header />
-                </Container>
-                <Container>
-                    <Row>
-                        <Col lg={{size: 5, offset: 0}}>
-                            {Char}
-                            <Button 
-                                 style = {styledBtn}
-                                className='toggleChar'
-                                onClick={this.toggleChar}
-                            >Toggle char</Button>
-                        </Col>
-                    </Row>
-                    <CharacterPage/>
-                    <Row>
-                       <Col md='6'>
-                           <ItemList onItemSelected={this.onItemSelected}
-                             getData={this.gotService.getAllBooks}
-                             renderItem={ (item) => item.name}
-                           />
-                       </Col>
-                       <Col md='6'>
-                           <ItemDetails itemId={this.state.selectedChar}
-                               getData={this.gotService.getBook}
-                           />
-                       </Col>
-                   </Row>
-                   <Row>
-                       <Col md='6'>
-                           <ItemList onItemSelected={this.onItemSelected}
-                             getData={this.gotService.getAllHouses}
-                             renderItem={ (item) => item.name }
-                           />
-                       </Col>
-                       <Col md='6'>
-                           <ItemDetails itemId={this.state.selectedChar}
-                                getData={this.gotService.getHouse}
-                           />
-                       </Col>
-                   </Row>
-                    
-                </Container>
-            </>
+            <Router>
+                <div className="app">
+                    <Container>
+                        <Header />
+                    </Container>
+                    <Container>
+                        <Row>
+                            <Col lg={{size: 5, offset: 0}}>
+                                {Char}
+                                <Button 
+                                     style = {styledBtn}
+                                    className='toggleChar'
+                                    onClick={this.toggleChar}
+                                >Toggle char</Button>
+                            </Col>
+                        </Row>
+                        <Switch>
+                        <Route path="/" exact component={()=>{
+                            return <h1
+                                style={styledH1}
+                            >Welcome to Game of Thrones Data Base!</h1>
+                        }}/>
+                        
+                        <Route path='/character' component={CharacterPage}/>
+                        <Route path='/houses' component={HousesPage}/>
+                        <Route exact path='/books' component={BooksPage}/>
+                        <Route path="/books/:id" render={
+                            ({match}) => {
+                                const {id}=match.params;
+                             return <BooksItem bookId={id}/> }
+                        }/>
+                        <Route path="*/*" exact={true} component={ ()=>{
+                            return <><h1
+                                style={styledH1}
+                            >404</h1>
+                            <h3
+                                style={styledH1}
+                            >Page don't exist</h3>
+                            </>
+                        }} />
+                        </Switch>
+                    </Container>
+                </div>
+            </Router>
         )
     }
             
